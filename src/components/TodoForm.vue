@@ -14,16 +14,16 @@
 		props: ['todos'],
 		data(){
 			return {
-				newTodo:{id:20,title:'',completed:false}
+				newTodo:{id:null,title:'',completed:false}
 			}
 		},
 		methods: {
 			addTodo(newTodo) {
 				this.axios.post('http://laravel-package.dev/api/todo/create',{title: this.newTodo.title}).then(response => {
 					console.log(response.data)
-					this.todos.push(newTodo)
+					this.todos.push(response.data)
 				})
-				this.newTodo = {id:20,title:'',completed:false}
+				this.newTodo = {id:null,title:'',completed:false}
 			}
 		}
 	}

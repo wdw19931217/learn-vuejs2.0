@@ -9,10 +9,10 @@
 			v-bind:class="[todo.completed ? 'btn-danger' : 'btn-success']"
 			v-on:click="toggleCompletion(todo)">{{ todo.completed ? 'undo' : 'completed' }}
 		</button>
-		<button class="btn btn-warning btn-xs pull-right" v-on:click="deleteTodo(index)">Delete</button>
+		<button class="btn btn-warning btn-xs pull-right" v-on:click="deleteTodo(index, todo)">Delete</button>
 	</li>
 	</ul>
-	<todo-form :todos="todos"></todo-form>
+	<todo-form></todo-form>
 	</div>
 </template>
 <style>
@@ -25,13 +25,23 @@
 	import TodoForm from './TodoForm'
 	export default{
 		name: 'todos',
-		props: ['todos'],
+		computed: {
+		  todos () {
+		      return this.$store.state.todos
+		  }
+		},
 		methods: {
-			deleteTodo(index) {
-				this.todos.splice(index,1)
+			deleteTodo(index, todo) {
+				this.axios.delete('http://laravel-package.dev/api/todo/'+ todo.id +'/delete').then( response => {
+						console.log(response.data)
+						this.todos.splice(index,1)
+					} )
 		},
 			toggleCompletion(todo) {
-				todo.completed = ! todo.completed
+				this.axios.patch('http://laravel-package.dev/api/todo/'+ todo.id +'/completed').then( response => {
+					console.log(response.data)
+					todo.completed = ! todo.completed
+				} )
 			}
 		},
 		components: {
